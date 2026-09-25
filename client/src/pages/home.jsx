@@ -1,6 +1,8 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import api from "../api/axios";
+import { MdArrowForwardIos } from "react-icons/md";
+import { MdArrowBackIos } from "react-icons/md";
 
 function Home() {
     const navigate = useNavigate();
@@ -14,8 +16,11 @@ function Home() {
     useEffect(() => {
         const getUsers = async () => {
             try {
+                
                 const token = localStorage.getItem("token");
 
+                // call user api send data (page & limit ) and token for authorization
+                // api send back filterd users data 
                 const res = await api.get(
                     `/users?page=${page}&limit=${limit}`,
                     {
@@ -62,6 +67,11 @@ function Home() {
             </div>
 
             <div className="flex gap-2 mt-6">
+                {/*  first page button */}
+                <button onClick={()=> setPage(1)} >
+                    <span className="flex cursor-pointer border px-3 py-3 rounded"><MdArrowBackIos/><MdArrowBackIos/></span>
+                </button>
+
                 {Array.from({ length: pages }, (_, i) => (
                     <button
                         key={i}
@@ -72,7 +82,13 @@ function Home() {
                         {i + 1}
                     </button>
                 ))}
+                {/*  last page btn */}
+                <button onClick={()=> setPage(pages)} >
+                    <span className="flex cursor-pointer border px-3 py-3 rounded"><MdArrowForwardIos/><MdArrowForwardIos/></span>
+                </button>
+
             </div>
+            <p className="text-[10px] mt-2">showing {page} of {pages} pages</p>
         </div>
     );
 }
