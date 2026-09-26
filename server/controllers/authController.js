@@ -14,7 +14,7 @@ const register =  async(req,res)=>{
         const existingUser =await User.findOne({email})
         console.log(existingUser);
         if(existingUser){
-            return res.status(400).json({
+            return res.status(409).json({
                 message:"user already exist"
             });
         }
@@ -57,8 +57,8 @@ const login = async(req,res)=>{
         const user = await User.findOne({ email });
 
         if (!user) {
-            return res.status(401).json({
-                message: "Invalid email or password"
+            return res.status(404).json({
+                message: "User not found"
             });
         }
         //compare possword
@@ -69,7 +69,7 @@ const login = async(req,res)=>{
 
         if (!isMatch) {
             return res.status(401).json({
-                message: "Invalid email or password"
+                message: "Incorrect password"
             });
         }
 
@@ -84,7 +84,7 @@ const login = async(req,res)=>{
             }
         )
 
-        res.json({
+        res.status(200).json({
             message: "Login successful",
             token,
             user: {
